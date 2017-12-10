@@ -2,7 +2,7 @@
 git submodule init
 git submodule update
 cd search/pybinds/
-cmake ./
+cmake3 ./
 make
 cd ../../
 source setup.bash

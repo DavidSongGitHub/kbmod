@@ -22,13 +22,14 @@ include_directories(
    /usr/include/python3.6
    /usr/include/python3.5
    /usr/include/python3
-   /usr/local/cuda-8.0/samples/common/inc
+   /usr/include/python34
+   /usr/local/cuda-9.0/samples/common/inc
    )
 
 link_directories(
    ../lib
-   /usr/local/cuda-8.0/samples/common/lib/linux/x86_64
-   /usr/local/cuda-8.0/lib64
+   /usr/local/cuda-9.0/samples/common/lib/linux/x86_64
+   /usr/local/cuda-9.0/lib64
    )
 
 cuda_add_library(
