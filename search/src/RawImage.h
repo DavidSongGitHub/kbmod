@@ -24,6 +24,7 @@
 
 namespace kbmod {
 
+#if USE_CUDA
 extern "C" void
 deviceConvolve(float *sourceImg, float *resultImg,
 	int width, int height, float *psfKernel,
@@ -31,6 +32,16 @@ deviceConvolve(float *sourceImg, float *resultImg,
 
 extern "C" void
 devicePool(int sourceWidth, int sourceHeight, float *source,
+	int destWidth, int destHeight, float *dest, char mode);
+#endif
+
+extern "C" void
+hostConvolve(float *sourceImg, float *resultImg,
+	int width, int height, float *psfKernel,
+	int psfSize, int psfDim, int psfRadius, float psfSum);
+
+extern "C" void
+hostPool(int sourceWidth, int sourceHeight, float *source,
 	int destWidth, int destHeight, float *dest, char mode);
 
 class RawImage : public ImageBase {

@@ -114,9 +114,16 @@ void RawImage::saveToExtension(std::string path) {
 
 void RawImage::convolve(PointSpreadFunc psf)
 {
+#if USE_CUDA
 	deviceConvolve(pixels.data(), pixels.data(), getWidth(), getHeight(),
 			psf.kernelData(), psf.getSize(), psf.getDim(),
 			psf.getRadius(), psf.getSum());
+#else
+	hostConvolve(pixels.data(), pixels.data(), getWidth(), getHeight(),
+			psf.kernelData(), psf.getSize(), psf.getDim(),
+			psf.getRadius(), psf.getSum());
+#endif
+
 }
 
 RawImage RawImage::pool(short mode)
@@ -125,8 +132,13 @@ RawImage RawImage::pool(short mode)
     int pooledWidth = (getWidth()+1)/2;
     int pooledHeight = (getHeight()+1)/2;
 	RawImage pooledImage = RawImage(pooledWidth, pooledHeight);
+#if USE_CUDA
 	devicePool(getWidth(), getHeight(), pixels.data(),
 			      pooledWidth, pooledHeight, pooledImage.getDataRef(), mode);
+#else
+	hostPool(getWidth(), getHeight(), pixels.data(),
+			      pooledWidth, pooledHeight, pooledImage.getDataRef(), mode);
+#endif
 	return pooledImage;
 }
 

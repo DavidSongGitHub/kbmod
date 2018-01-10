@@ -135,7 +135,7 @@ void KBMOSearch::preparePsiPhi()
 		}
 		endTimer();
 		startTimer("Convolving images");
-		gpuConvolve();
+		convolve();
 		endTimer();
 		psiPhiGenerated = true;
 	}
@@ -230,12 +230,7 @@ void KBMOSearch::repoolArea(trajRegion& t)
 	}
 }
 
-void KBMOSearch::cpuConvolve()
-{
-
-}
-
-void KBMOSearch::gpuConvolve()
+void KBMOSearch::convolve()
 {
 	for (int i=0; i<stack.imgCount(); ++i)
 	{
@@ -311,15 +306,23 @@ void KBMOSearch::createInterleavedPsiPhi()
 
 void KBMOSearch::cpuSearch(int minObservations)
 {
+	hostSearch(searchList.size(), stack.imgCount(), minObservations,
+			interleavedPsiPhi.size(), stack.getPPI()*RESULTS_PER_PIXEL,
+			searchList.data(), results.data(), stack.getTimes().data(),
+			interleavedPsiPhi.data(), stack.getWidth(), stack.getHeight());
 
 }
 
 void KBMOSearch::gpuSearch(int minObservations)
 {
+#if USE_CUDA
 	deviceSearch(searchList.size(), stack.imgCount(), minObservations,
 			interleavedPsiPhi.size(), stack.getPPI()*RESULTS_PER_PIXEL,
 			searchList.data(), results.data(), stack.getTimes().data(),
 			interleavedPsiPhi.data(), stack.getWidth(), stack.getHeight());
+#else
+	std::cout << "KBMOD has not been built with CUDA, update CMakeLists.txt\n";
+#endif
 }
 
 std::vector<trajRegion> KBMOSearch::resSearch(float xVel, float yVel,

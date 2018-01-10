@@ -12,6 +12,7 @@
 
 namespace kbmod {
 
+constexpr bool CUDA = static_cast<bool>(USE_CUDA);
 constexpr unsigned int MAX_KERNEL_RADIUS = 15;
 constexpr unsigned short CONV_THREAD_DIM = 32;
 constexpr unsigned short POOL_THREAD_DIM = 32;

@@ -25,6 +25,7 @@
 
 namespace kbmod {
 
+#if USE_CUDA
 extern "C" void
 deviceSearch(int trajCount, int imageCount, int minObservations, int psiPhiSize,
 			 int resultsCount, trajectory *trajectoriesToSearch, trajectory *bestTrajects,
@@ -40,6 +41,12 @@ devicePooledTeardown(float **deviceTimes, float **deviceImages, int **dimensions
 extern "C" void
 deviceLHBatch(int imageCount, int depth, int regionCount, trajRegion *regions,
 		float **deviceTimes, float **deviceImages, float **deviceDimensions);
+#endif
+
+extern "C" void
+hostSearch(int trajCount, int imageCount, int minObservations, int psiPhiSize,
+			 int resultsCount, trajectory *trajectoriesToSearch, trajectory *bestTrajects,
+		     float *imageTimes, float *interleavedPsiPhi, int width, int height);
 
 class KBMOSearch {
 public:
@@ -106,8 +113,7 @@ private:
 			std::vector<std::vector<RawImage>>& destination, short mode);
 	std::vector<RawImage> poolSingle(std::vector<RawImage>& mip, RawImage& img, short mode);
 	void repoolArea(trajRegion& t);
-	void cpuConvolve();
-	void gpuConvolve();
+	void convolve();
 	void removeObjectFromImages(trajRegion& t);
 	void saveImages(std::string path);
 	void createSearchList(int angleSteps, int veloctiySteps, float minAngle,

@@ -1,51 +1,86 @@
 cmake_minimum_required(VERSION 3.5)
 project(kbmod)
-find_package(CUDA REQUIRED)
+find_package(CUDA)
 add_subdirectory(pybind11)
 
+if (CUDA_FOUND)
+   set(
+      CUDA_NVCC_FLAGS
+      ${CUDA_NVCC_FLAGS};
+      -O3 -gencode arch=compute_60,code=sm_60
+      )
+
+   set(CUDA_64_BIT_DEVICE_CODE ON)
+endif()
+
 set(
-   CUDA_NVCC_FLAGS
-   ${CUDA_NVCC_FLAGS};
-   -O3 -gencode arch=compute_60,code=sm_60
+   CMAKE_CXX_FLAGS "-std=c++11 -O3 -fvisibility=hidden -fopenmp -DUSE_CUDA=0" # -flto
    )
 
-set(CUDA_64_BIT_DEVICE_CODE ON)
-
-set(
-   CMAKE_CXX_FLAGS "-std=c++11 -O3 -fvisibility=hidden -fopenmp" # -flto
+if (CUDA_FOUND)
+   include_directories(
+      ../include
+      ../src
+      ./pybind11/include
+      /usr/include/python3.6
+      /usr/include/python3.5
+      /usr/include/python3
+      /usr/include/python34
+      /usr/local/cuda-9.0/samples/common/inc
    )
 
-include_directories(
-   ../include
-   ../src
-   ./pybind11/include
-   /usr/include/python3.6
-   /usr/include/python3.5
-   /usr/include/python3
-   /usr/include/python34
-   /usr/local/cuda-9.0/samples/common/inc
+   link_directories(
+      ../lib
+      /usr/local/cuda-9.0/samples/common/lib/linux/x86_64
+      /usr/local/cuda-9.0/lib64
    )
 
-link_directories(
-   ../lib
-   /usr/local/cuda-9.0/samples/common/lib/linux/x86_64
-   /usr/local/cuda-9.0/lib64
+   cuda_add_library(
+      kbmod 
+      MODULE 
+      classBindings.cpp
+      ../src/kernels.cu
+   )   
+
+   target_link_libraries(
+      kbmod
+      pybind11::module
+      -lcfitsio
+      -lgomp
+      cudart
    )
 
-cuda_add_library(
-   kbmod 
-   MODULE 
-   classBindings.cpp
-   ../src/kernels.cu
+else()
+
+   include_directories(
+      ../include
+      ../src
+      ./pybind11/include
+      /usr/include/python3.6
+      /usr/include/python3.5
+      /usr/include/python3
+      /usr/include/python34
    )
 
-target_link_libraries(
-   kbmod
-   pybind11::module
-   -lcfitsio
-   -lgomp
-   cudart
+   link_directories(
+      ../lib
    )
+
+   pybind11_add_module(
+      kbmod 
+      MODULE
+      classBindings.cpp
+      ../src/kernels.cu                    
+   )
+
+   target_link_libraries(
+      kbmod
+      pybind11::module
+      -lcfitsio
+      -lgomp
+   )
+
+endif()
 
 set_target_properties(
    kbmod

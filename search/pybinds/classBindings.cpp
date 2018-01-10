@@ -126,6 +126,7 @@ PYBIND11_MODULE(kbmod, m) {
 		.def(py::init<is, pf>())
 		.def("save_psi_phi", &ks::savePsiPhi)
 		.def("gpu", &ks::gpu)
+		.def("cpu", &ks::cpu)
 		.def("region_search", &ks::regionSearch)
 		.def("set_debug", &ks::setDebug)
 		.def("filter_min_obs", &ks::filterResults)
