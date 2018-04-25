@@ -58,7 +58,7 @@ class run_search(analysis_utils):
 
         return patch_visit_ids
 
-    def run_search(self, im_filepath, res_filepath, out_suffix, time_file,
+    def run_grid_search(self, im_filepath, res_filepath, out_suffix, time_file,
                    likelihood_level=10., mjd_lims=None):
 
         visit_nums, visit_times = np.genfromtxt(time_file, unpack=True)

@@ -33,5 +33,5 @@ if __name__ == "__main__":
 
     rs = run_search(v_arr, ang_arr, num_obs)
 
-    rs.run_search(im_filepath, res_filepath, results_suffix,
+    rs.run_grid_search(im_filepath, res_filepath, results_suffix,
                   time_file)
