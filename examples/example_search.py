@@ -3,6 +3,7 @@ import argparse
 from run_search import run_search
 
 if __name__ == "__main__":
+    """ This runs an example search """
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--image_dir', dest='im_filepath')
