@@ -1,6 +1,6 @@
 <img src="https://gist.githubusercontent.com/PWhiddy/d42e66a9dd8e4af205a706f388a90ed4/raw/ae5bb87ada12538289852b58ba8e54b564a81584/kbmod.svg?sanitize=true" alt="logo" width="400" height="160"/>
 
-A kernel-Based Moving Object Detection image processing framework with CUDA  
+An image processing framework for moving object detection implemented with GPUs.  
 Based on a Maximum Likelihood detection algorithm for moving astronomical objects.
 
 [![Build Status](https://travis-ci.org/DiracInstitute/kbmod.svg?branch=master)](https://travis-ci.org/DiracInstitute/kbmod) [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
@@ -16,14 +16,16 @@ objects based upon method of maximum likelihood detection.
 
 The packages required to build the code are:
 
-* python3-dev
+* python3 development headers
 * Scipy (Numpy, Matplotlib)
 * Scikit-learn
-* Astropy
 * Cuda 8.0
-* CMake
+* CMake 3
 
 **To install:**  
+Open search/pybinds/CmakeLists.txt and verify in the "include_directories" section that the paths to the python headers and to the cuda installation are correct. 
+
+Then run 
 ```source install.sh```
 This will build the python library and run the tests.
 
